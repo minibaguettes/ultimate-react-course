@@ -142,3 +142,76 @@ function getBooks() {
 function getBook(id) {
   return data.find((d) => d.id === id);
 }
+
+/* ----------------------------------------
+/* DESTRUCTURING - get data out of array */
+
+const book = getBook(3);
+book;
+// const title = book.title;
+// const author = book.author;
+
+// get multiple data from object rather than one by one
+// - property name (title, author, ...) must be exact same name as in object
+const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
+  book;
+
+/* ----------------------------------------
+/* DESTRUCTURING ARRAYS - instead of relying on property name, relies on order of elements */
+
+// const primaryGenre = genres[0];
+// const secondaryGenre = genres[1];
+
+// - first variable defined takes first element of array
+// - second variable defined takes second element of array
+/* ----------------------------------------
+/* REST OPERATOR (...variableName) => creates array with all other genres, can only be placed at end */
+const [primaryGenre, secondaryGenre, ...otherGenres] = genres;
+
+console.log(primaryGenre, secondaryGenre, otherGenres);
+
+/* ----------------------------------------
+/* SPREAD OPERATOR (...variableName) => take all values out of array and place them one by one otherwise will have [[1, 2, 3], [item2add]] instead of [1, 2, 3, item2add] */
+const newGenres = [...genres, "epic fantasty"];
+newGenres;
+
+const updatedBook = {
+  // spread original properties
+  ...book,
+  // add new property
+  moviePublicationDate: "2001-12-19",
+  // overwrite existing property
+  pages: 1210,
+};
+updatedBook;
+
+/* ----------------------------------------
+/* ARROW FUNCTIONS */
+
+// function declaration
+// function getYear(str) {
+//   return str.split("-")[0];
+// }
+
+// function expression
+const getYear = (str) => str.split("-")[0];
+
+/* ----------------------------------------
+/* TEMPLATE LITERALS */
+
+const summary = `${title}, a ${pages}-page long book, was written by ${author} and published in ${getYear(
+  publicationDate
+)}. The book has ${hasMovieAdaptation ? "" : "not"} been adapted as a movie`;
+summary;
+
+/* ----------------------------------------
+/* OPTIONAL CHAINING / NULLISH COALESCING */
+
+function getTotalReviewCount(book) {
+  // optional chaining:   a?.b => if a IS defined, then continue to b; if NOT, then stop
+  // nullish coalescing:  c ?? d => returns d ONLY IF c is NULL or UNDEFINED; NOT when it is 0 or NaN
+  const goodreads = book.reviews?.goodreads?.reviewsCount ?? 0;
+  const librarything = book.reviews?.librarything?.reviewsCount ?? 0;
+  return goodreads + librarything;
+}
+console.log(getTotalReviewCount(book));
